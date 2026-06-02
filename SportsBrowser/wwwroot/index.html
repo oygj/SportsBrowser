@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Philadelphia Sports Schedule</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <h1>Philadelphia Sports Schedule</h1>
+        <p>Browse Eagles, 76ers, Phillies, Flyers, and Union games by date.</p>
+      </div>
+      <div class="hero-actions">
+        <label for="datePicker">Select date</label>
+        <input type="date" id="datePicker" aria-label="Select game date" />
+        <button id="refreshButton">Refresh</button>
+      </div>
+    </header>
+
+    <section id="statusMessage" class="status-message"></section>
+    
+    <div class="date-navigation">
+      <button id="prevDayButton" class="nav-button" aria-label="Previous day">
+        <span class="arrow">←</span>
+      </button>
+      <button id="todayButton" class="nav-button today-btn">Today</button>
+      <button id="nextDayButton" class="nav-button" aria-label="Next day">
+        <span class="arrow">→</span>
+      </button>
+    </div>
+    
+    <section id="gamesContainer" class="games-container"></section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
