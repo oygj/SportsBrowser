@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SportsBrowser")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42c5d5ed95961a1ccd6ffba79e141aaade3e2393")]
 [assembly: System.Reflection.AssemblyProductAttribute("SportsBrowser")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SportsBrowser")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

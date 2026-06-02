@@ -135,10 +135,10 @@ function formatTime(value) {
   return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
 }
 
-function isScheduledStatus(status, detail) {
-  const combined = `${status ?? ''} ${detail ?? ''}`.toLowerCase();
+function isScheduledStatus(status) {
+  const combined = `${status ?? ''}`.toLowerCase();
 
-  return /\b(?:scheduled|pre(?:-| )?game|pregame|preview|upcoming|pending|tbd|not started|future)\b/.test(combined);
+  return combined.includes('scheduled') || combined.includes('pre') || combined.includes('pregame') || combined.includes('preview');
 }
 
 function formatScore(away, home, status, detail) {
@@ -146,7 +146,7 @@ function formatScore(away, home, status, detail) {
   const homeValue = Number(home);
   const isNumericScore = Number.isFinite(awayValue) && Number.isFinite(homeValue);
 
-  if (isNumericScore && awayValue === 0 && homeValue === 0 && isScheduledStatus(status, detail)) {
+  if (isNumericScore && awayValue === 0 && homeValue === 0 && isScheduledStatus(status)) {
     return 'vs.';
   }
 

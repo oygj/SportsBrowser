@@ -33,4 +33,5 @@ C:\Development\SportsBrowser\SportsBrowser\obj\Debug\net9.0\SportsBrowser.genrun
 C:\Development\SportsBrowser\SportsBrowser\obj\Debug\net9.0\ref\SportsBrowser.dll
 C:\Development\SportsBrowser\SportsBrowser\obj\Debug\net9.0\compressed\eigzt6mv9j-nq8s8udl91.gz
 C:\Development\SportsBrowser\SportsBrowser\obj\Debug\net9.0\compressed\t05h5ieb28-7mjjiwwj1j.gz
-C:\Development\SportsBrowser\SportsBrowser\obj\Debug\net9.0\compressed\x5b1txfrqq-z7rrnuj0nn.gz
+C:\Development\SportsBrowser\SportsBrowser\obj\Debug\net9.0\SportsBrowser.sourcelink.json
+C:\Development\SportsBrowser\SportsBrowser\obj\Debug\net9.0\compressed\x5b1txfrqq-ivi3inbqyd.gz
