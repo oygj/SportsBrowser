@@ -9,6 +9,7 @@ builder.Services.AddHttpClient<IEspnScheduleClient, EspnScheduleClient>((sp, cli
 {
     var settings = sp.GetRequiredService<IOptions<EspnSettings>>().Value;
     client.BaseAddress = new Uri(settings.BaseUrl);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("curl/8.0");
 });
 
 var app = builder.Build();

@@ -25,9 +25,13 @@ public sealed class EspnScheduleClient : IEspnScheduleClient
 
     public async Task<IEnumerable<GameEventDto>> GetGamesForDateAsync(DateTime date, CancellationToken cancellationToken = default)
     {
-        var requests = _settings.Leagues.Select(league => FetchLeagueGamesAsync(league, date, cancellationToken));
-        var results = await Task.WhenAll(requests);
-        return results.SelectMany(x => x).OrderBy(x => x.StartDate).ToArray();
+        var games = new List<GameEventDto>();
+        foreach (var league in _settings.Leagues)
+        {
+            games.AddRange(await FetchLeagueGamesAsync(league, date, cancellationToken));
+        }
+
+        return games.OrderBy(x => x.StartDate).ToArray();
     }
 
     private async Task<IEnumerable<GameEventDto>> FetchLeagueGamesAsync(LeagueInfo league, DateTime date, CancellationToken cancellationToken)
