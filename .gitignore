@@ -3,6 +3,16 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Ignore all .dll, .exe, .pdb files
+*.dll
+*.exe
+*.pdb
+
+# Ignore bin and obj directories (common for compiled projects)
+/bin/
+/obj/
+
+
 # User-specific files
 *.rsuser
 *.suo

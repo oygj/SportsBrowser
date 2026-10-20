@@ -138,7 +138,7 @@ function formatTime(value) {
 function isScheduledStatus(status, detail) {
   const combined = `${status ?? ''} ${detail ?? ''}`.toLowerCase();
 
-  return /\b(?:scheduled|pre(?:-| )?game|pregame|preview|upcoming|pending|tbd|not started|future)\b/.test(combined);
+  return /\b(?:status_scheduled|pre(?:-| )?game|pregame|preview|upcoming|pending|tbd|not started|future)\b/.test(combined);
 }
 
 function formatScore(away, home, status, detail) {
