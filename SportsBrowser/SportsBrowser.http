@@ -1,6 +1,16 @@
 @SportsBrowser_HostAddress = http://localhost:5146
 
-GET {{SportsBrowser_HostAddress}}/weatherforecast/
+GET {{SportsBrowser_HostAddress}}/api/teams
+Accept: application/json
+
+###
+
+GET {{SportsBrowser_HostAddress}}/api/games
+Accept: application/json
+
+###
+
+GET {{SportsBrowser_HostAddress}}/api/games?date=2026-10-22
 Accept: application/json
 
 ###
