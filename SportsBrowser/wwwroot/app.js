@@ -5,6 +5,7 @@ const todayButton = document.getElementById('todayButton');
 const nextDayButton = document.getElementById('nextDayButton');
 const statusMessage = document.getElementById('statusMessage');
 const gamesContainer = document.getElementById('gamesContainer');
+const websiteVersion = document.getElementById('websiteVersion');
 
 const now = new Date();
 datePicker.value = formatDateValue(now);
@@ -41,7 +42,22 @@ datePicker.addEventListener('change', () => {
 
 window.addEventListener('load', () => {
   loadSchedule(datePicker.value);
+  loadVersion();
 });
+
+async function loadVersion() {
+  try {
+    const response = await fetch('/api/version');
+    if (!response.ok) {
+      return;
+    }
+
+    const data = await response.json();
+    websiteVersion.textContent = data.version;
+  } catch {
+    // Leave the default placeholder if the version can't be loaded.
+  }
+}
 
 async function loadSchedule(dateValue) {
   showStatus('Loading schedule...', '');

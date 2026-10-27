@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.Extensions.Options;
 using SportsBrowser.Models;
 using SportsBrowser.Services;
@@ -16,7 +17,11 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    // Make browsers revalidate (cheap via ETag) so CSS/JS changes show up without a hard refresh.
+    OnPrepareResponse = ctx => ctx.Context.Response.Headers.CacheControl = "no-cache"
+});
 
 app.MapGet("/api/teams", (IEspnScheduleClient scheduleClient) =>
 {
@@ -36,6 +41,15 @@ app.MapGet("/api/games", async (DateTime? date, IEspnScheduleClient scheduleClie
     var targetDate = date?.Date ?? DateTime.UtcNow.Date;
     var games = await scheduleClient.GetGamesForDateAsync(targetDate);
     return Results.Ok(games);
+});
+
+app.MapGet("/api/version", () =>
+{
+    var version = typeof(Program).Assembly
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "unknown";
+
+    // Strip the source-control hash suffix (e.g. "1.0.0+abc123").
+    return Results.Ok(new { Version = version.Split('+')[0] });
 });
 
 app.MapFallbackToFile("index.html");

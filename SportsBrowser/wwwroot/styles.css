@@ -18,7 +18,7 @@ body {
 .app-shell {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 24px 24px 48px;
 }
 
 .hero {
@@ -376,6 +376,22 @@ button:hover {
 
 .home-stat {
   color: #27df83;
+}
+
+.site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 6px 16px;
+  text-align: center;
+  font-size: 0.7rem;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.site-footer p {
+  margin: 0;
 }
 
 @media (max-width: 740px) {
