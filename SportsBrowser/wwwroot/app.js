@@ -14,7 +14,7 @@ refreshButton.addEventListener('click', () => {
 });
 
 prevDayButton.addEventListener('click', () => {
-  const current = new Date(datePicker.value);
+  const current = parseDateValue(datePicker.value);
   current.setDate(current.getDate() - 1);
   datePicker.value = formatDateValue(current);
   loadSchedule(datePicker.value);
@@ -27,7 +27,7 @@ todayButton.addEventListener('click', () => {
 });
 
 nextDayButton.addEventListener('click', () => {
-  const current = new Date(datePicker.value);
+  const current = parseDateValue(datePicker.value);
   current.setDate(current.getDate() + 1);
   datePicker.value = formatDateValue(current);
   loadSchedule(datePicker.value);
@@ -83,7 +83,7 @@ function renderGames(games) {
     card.innerHTML = `
       <header>
         <div>
-          <h2>${game.sport} — ${game.teamDisplayName}</h2>
+          <h2>${game.leagueLogoUrl ? `<img class="league-logo" src="${game.leagueLogoUrl}" width="28" height="28" alt="${game.sport}" title="${game.sport}">` : `${game.sport} —`} ${game.teamDisplayName}</h2>
           <div class="status-badge ${getStatusClass(game.status, game.statusDetail)}">${formatStatusLabel(game.status, game.statusDetail)}</div>
         </div>
         <div>${formatTime(game.startDate)}</div>
@@ -120,14 +120,22 @@ function showStatus(message, details = '') {
   }
 }
 
+// Format as YYYY-MM-DD in the client's local time zone (toISOString would use UTC)
 function formatDateValue(date) {
-  return date.toISOString().slice(0, 10);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// Parse YYYY-MM-DD as local midnight (new Date('YYYY-MM-DD') would parse it as UTC midnight)
+function parseDateValue(value) {
+  const [year, month, day] = value.split('-').map(Number);
+  return new Date(year, month - 1, day);
 }
 
 function formatDisplayDate(value) {
-  const [year, month, day] = value.split('-');
-  const date = new Date(year, month - 1, day);
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  return parseDateValue(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function formatTime(value) {

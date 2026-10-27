@@ -13,6 +13,7 @@ public sealed class GameEventDto
     public string HomeTeamAbbreviation { get; set; } = null!;
     public string AwayTeamAbbreviation { get; set; } = null!;
     public string? LogoUrl { get; set; }
+    public string? LeagueLogoUrl { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public string Venue { get; set; } = null!;
     public string Status { get; set; } = null!;

@@ -37,6 +37,7 @@ public sealed class EspnScheduleClient : IEspnScheduleClient
     private async Task<IEnumerable<GameEventDto>> FetchLeagueGamesAsync(LeagueInfo league, DateTime date, CancellationToken cancellationToken)
     {
         var url = $"{league.LeaguePath}/scoreboard?dates={date:yyyyMMdd}";
+        Console.WriteLine($"Fetching games for {league.Sport} on {date:yyyy-MM-dd} from URL: {url}");
         using var response = await _httpClient.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
@@ -47,6 +48,8 @@ public sealed class EspnScheduleClient : IEspnScheduleClient
             return Array.Empty<GameEventDto>();
         }
 
+        var leagueLogoUrl = GetLeagueLogoUrl(document.RootElement);
+
         var matches = new List<GameEventDto>();
         foreach (var eventElement in eventsElement.EnumerateArray())
         {
@@ -54,6 +57,8 @@ public sealed class EspnScheduleClient : IEspnScheduleClient
             {
                 continue;
             }
+
+            match!.LeagueLogoUrl = leagueLogoUrl;
 
             // Fetch box score for finished games
             if (match!.HomeScore.HasValue && match.AwayScore.HasValue)
@@ -241,6 +246,43 @@ public sealed class EspnScheduleClient : IEspnScheduleClient
         }
 
         return string.Empty;
+    }
+
+    private static string GetLeagueLogoUrl(JsonElement root)
+    {
+        if (!root.TryGetProperty("leagues", out var leaguesElement) || leaguesElement.ValueKind != JsonValueKind.Array || leaguesElement.GetArrayLength() == 0)
+        {
+            return string.Empty;
+        }
+
+        if (!leaguesElement[0].TryGetProperty("logos", out var logosElement) || logosElement.ValueKind != JsonValueKind.Array)
+        {
+            return string.Empty;
+        }
+
+        // Prefer the light-background ("default") logo; fall back to the first one listed
+        var fallback = string.Empty;
+        foreach (var logo in logosElement.EnumerateArray())
+        {
+            if (!logo.TryGetProperty("href", out var hrefElement) || hrefElement.ValueKind != JsonValueKind.String)
+            {
+                continue;
+            }
+
+            var href = hrefElement.GetString() ?? string.Empty;
+            if (logo.TryGetProperty("rel", out var relElement) && relElement.ValueKind == JsonValueKind.Array
+                && relElement.EnumerateArray().Any(rel => rel.GetString() == "default"))
+            {
+                return href;
+            }
+
+            if (fallback.Length == 0)
+            {
+                fallback = href;
+            }
+        }
+
+        return fallback;
     }
 
     private static bool ContainsToken(string value, string token)
