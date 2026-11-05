@@ -102,3 +102,10 @@ SportsBrowser/
 2. Each event is kept only if one competitor matches the league's `TeamNameKeywords`. It is then mapped to a `GameEventDto`.
 3. For games that have scores, it also calls the `summary` endpoint to get team box-score stats. If that call fails, the game is still returned, just without a box score.
 4. The frontend renders the games and lets you move between dates.
+
+
+## Build
+
+To build a new release version follow these steps:
+1. `dotnet publish .\SportsBrowser\SportsBrowser.csproj -c Release -o .\publish`
+2. `scp -p -r .\publish\* oyvind@192.168.1.8:/home/oyvind/tmp-dir `
