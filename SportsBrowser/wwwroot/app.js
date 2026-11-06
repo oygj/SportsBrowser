@@ -92,14 +92,14 @@ function renderGames(games) {
     const resultClass = getResultClass(game);
     const card = document.createElement('article');
     card.className = `game-card${resultClass ? ` ${resultClass}` : ''}`;
-    if (game.logoUrl) {
-      card.style.setProperty('--logo-url', `url("${game.logoUrl}")`);
+    if (game.leagueLogoUrl) {
+      card.style.setProperty('--logo-url', `url("${game.leagueLogoUrl}")`);
     }
 
     card.innerHTML = `
       <header>
         <div>
-          <h2>${game.leagueLogoUrl ? `<img class="league-logo" src="${game.leagueLogoUrl}" width="28" height="28" alt="${game.sport}" title="${game.sport}">` : `${game.sport} —`} ${game.teamDisplayName}</h2>
+          <h2>${game.logoUrl ? `<img class="team-logo" src="${game.logoUrl}" width="48" height="48" alt="${game.teamDisplayName}" title="${game.sport}">` : `${game.sport} —`} ${game.teamDisplayName}</h2>
           <div class="status-badge ${getStatusClass(game.status, game.statusDetail)}">${formatStatusLabel(game.status, game.statusDetail)}</div>
         </div>
         <div>${formatTime(game.startDate)}</div>

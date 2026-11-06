@@ -152,8 +152,8 @@ button:hover {
   background-image: var(--logo-url);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 70%;
-  opacity: 0.12;
+  background-size: 25%;
+  opacity: 0.05;
   filter: saturate(0.25) brightness(1.2);
   pointer-events: none;
 }
@@ -199,9 +199,9 @@ button:hover {
   font-size: 1.2rem;
 }
 
-.league-logo {
-  width: 28px;
-  height: 28px;
+.team-logo {
+  width: 48px;
+  height: 48px;
   object-fit: contain;
   flex-shrink: 0;
 }
