@@ -7,38 +7,58 @@ const statusMessage = document.getElementById('statusMessage');
 const gamesContainer = document.getElementById('gamesContainer');
 const websiteVersion = document.getElementById('websiteVersion');
 
-const now = new Date();
-datePicker.value = formatDateValue(now);
+const dateBar = document.querySelector('.date-bar');
+const dateDisplay = document.getElementById('dateDisplay');
+const dateDisplayText = document.getElementById('dateDisplayText');
 
-refreshButton.addEventListener('click', () => {
-  loadSchedule(datePicker.value);
-});
+setDate(new Date(), { load: false });
 
-prevDayButton.addEventListener('click', () => {
-  const current = parseDateValue(datePicker.value);
-  current.setDate(current.getDate() - 1);
-  datePicker.value = formatDateValue(current);
-  loadSchedule(datePicker.value);
-});
+refreshButton.addEventListener('click', () => loadSchedule(datePicker.value));
+prevDayButton.addEventListener('click', () => shiftDate(-1));
+nextDayButton.addEventListener('click', () => shiftDate(1));
+todayButton.addEventListener('click', () => setDate(new Date()));
 
-todayButton.addEventListener('click', () => {
-  const today = new Date();
-  datePicker.value = formatDateValue(today);
-  loadSchedule(datePicker.value);
-});
-
-nextDayButton.addEventListener('click', () => {
-  const current = parseDateValue(datePicker.value);
-  current.setDate(current.getDate() + 1);
-  datePicker.value = formatDateValue(current);
-  loadSchedule(datePicker.value);
+// Clicking the visible date opens the native calendar of the hidden input.
+dateDisplay.addEventListener('click', () => {
+  try {
+    datePicker.showPicker();
+  } catch {
+    datePicker.focus();
+    datePicker.click();
+  }
 });
 
 datePicker.addEventListener('change', () => {
   if (datePicker.value) {
-    loadSchedule(datePicker.value);
+    setDate(parseDateValue(datePicker.value));
   }
 });
+
+// Left/right arrow keys step through days, unless the user is typing somewhere.
+document.addEventListener('keydown', (event) => {
+  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+  if (event.key === 'ArrowLeft') shiftDate(-1);
+  if (event.key === 'ArrowRight') shiftDate(1);
+});
+
+function shiftDate(days) {
+  const current = parseDateValue(datePicker.value);
+  current.setDate(current.getDate() + days);
+  setDate(current);
+}
+
+function setDate(date, { load = true } = {}) {
+  datePicker.value = formatDateValue(date);
+  dateDisplayText.textContent = date.toLocaleDateString(undefined, {
+    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+  });
+  dateDisplay.setAttribute('aria-label', `Choose a date, currently ${date.toLocaleDateString(undefined, { dateStyle: 'full' })}`);
+  todayButton.disabled = datePicker.value === formatDateValue(new Date());
+  if (load) {
+    loadSchedule(datePicker.value);
+  }
+}
 
 window.addEventListener('load', () => {
   loadSchedule(datePicker.value);
@@ -59,8 +79,12 @@ async function loadVersion() {
   }
 }
 
+let latestRequest = 0;
+
 async function loadSchedule(dateValue) {
-  showStatus('Loading schedule...', '');
+  const requestId = ++latestRequest;
+  showStatus('Loading…', '', 'loading');
+  dateBar.setAttribute('aria-busy', 'true');
   gamesContainer.innerHTML = '';
 
   try {
@@ -72,16 +96,22 @@ async function loadSchedule(dateValue) {
     }
 
     const games = await response.json();
+    if (requestId !== latestRequest) return; // a newer date was requested meanwhile
 
     if (!Array.isArray(games) || games.length === 0) {
-      showStatus('No Philadelphia games were found for this date.', '');
+      showStatus('No games');
       return;
     }
 
     renderGames(games);
-    showStatus(`Showing ${games.length} game(s) for ${formatDisplayDate(dateValue)}`);
+    showStatus(`${games.length} ${games.length === 1 ? 'game' : 'games'}`);
   } catch (error) {
-    showStatus('Unable to load schedule. Please try again later.', error.message);
+    if (requestId !== latestRequest) return;
+    showStatus('Couldn’t load schedule.', error.message, 'error');
+  } finally {
+    if (requestId === latestRequest) {
+      dateBar.removeAttribute('aria-busy');
+    }
   }
 }
 
@@ -129,10 +159,13 @@ function renderGames(games) {
   });
 }
 
-function showStatus(message, details = '') {
-  statusMessage.textContent = message;
-  if (details) {
-    statusMessage.textContent += ` ${details}`;
+function showStatus(message, details = '', state = '') {
+  statusMessage.textContent = details ? `${message} ${details}` : message;
+  statusMessage.title = statusMessage.textContent;
+  if (state) {
+    statusMessage.dataset.state = state;
+  } else {
+    delete statusMessage.dataset.state;
   }
 }
 
@@ -148,10 +181,6 @@ function formatDateValue(date) {
 function parseDateValue(value) {
   const [year, month, day] = value.split('-').map(Number);
   return new Date(year, month - 1, day);
-}
-
-function formatDisplayDate(value) {
-  return parseDateValue(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function formatTime(value) {

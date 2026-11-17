@@ -4,34 +4,39 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Philadelphia Sports Schedule</title>
+  <link rel="icon" href="images/favicon.ico" sizes="any" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="hero">
-      <div>
-        <h1>Philadelphia Sports Schedule</h1>
-        <p>Browse Eagles, 76ers, Phillies, Flyers, and Union games by date.</p>
-      </div>
-      <div class="hero-actions">
-        <label for="datePicker">Select date</label>
-        <input type="date" id="datePicker" aria-label="Select game date" />
-        <button id="refreshButton">Refresh</button>
-      </div>
+      <h1 class="hero-title">
+        <img class="hero-logo" src="images/Philadelphia-sport-browser-logo.png" width="840" height="285" alt="Philadelphia Sports Schedule" />
+      </h1>
+      <p>Browse Eagles, 76ers, Phillies, Flyers, and Union games by date.</p>
     </header>
 
-    <section id="statusMessage" class="status-message"></section>
-    
-    <div class="date-navigation">
-      <button id="prevDayButton" class="nav-button" aria-label="Previous day">
-        <span class="arrow">←</span>
+    <nav class="date-bar" aria-label="Choose date">
+      <button id="prevDayButton" class="icon-button" type="button" aria-label="Previous day" title="Previous day (←)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
       </button>
-      <button id="todayButton" class="nav-button today-btn">Today</button>
-      <button id="nextDayButton" class="nav-button" aria-label="Next day">
-        <span class="arrow">→</span>
+      <div class="date-picker">
+        <button id="dateDisplay" class="date-display" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+          <span id="dateDisplayText"></span>
+        </button>
+        <input type="date" id="datePicker" class="date-input" tabindex="-1" aria-hidden="true" />
+      </div>
+      <button id="nextDayButton" class="icon-button" type="button" aria-label="Next day" title="Next day (→)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
       </button>
-    </div>
-    
+      <button id="todayButton" class="today-button" type="button">Today</button>
+      <span id="statusMessage" class="status-message" role="status" aria-live="polite"></span>
+      <button id="refreshButton" class="icon-button" type="button" aria-label="Refresh" title="Refresh">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg>
+      </button>
+    </nav>
+
     <section id="gamesContainer" class="games-container"></section>
 
     <footer class="site-footer">

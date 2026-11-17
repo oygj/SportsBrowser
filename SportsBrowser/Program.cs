@@ -52,6 +52,9 @@ app.MapGet("/api/version", () =>
     return Results.Ok(new { Version = version.Split('+')[0] });
 });
 
+// Unknown API routes should 404 rather than fall through to the SPA page.
+app.Map("/api/{**rest}", () => Results.NotFound());
+
 app.MapFallbackToFile("index.html");
 
 app.Run();
